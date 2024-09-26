@@ -19,7 +19,47 @@
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
 </head>
+
+<style> 
+ body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        #calendar {
+            width: 70%;
+        }
+        .book-event-form {
+            width: 25%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .book-event-form input, .book-event-form select {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .book-event-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: teal;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .book-event-form button:hover {
+            background-color: darkcyan;
+        }
+</style>
 <body>
 
   <!-- ======= Header ======= -->
@@ -147,7 +187,7 @@
           </a>
           </li>
           <li>
-          <a href="eventbooking.php">
+          <a href="tables-data.php">
               <i class="bi bi-circle"></i><span>Event Booking</span>
           </a>
           </li>
@@ -192,47 +232,46 @@
 
   <main id="main" class="main">
 
-    <div class="pagetitle">
-      <h1>Blank Page</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item">Pages</li>
-          <li class="breadcrumb-item active">Blank</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
+    <div class="container">
+          <!-- Calendar -->
+          <div id="calendar"></div>
 
-    <section class="section">
-      <div class="row">
-        <div class="col-lg-6">
+          <!-- Booking Form -->
+          <div class="book-event-form">
+              <h2>Book Event</h2>
+              <form id="bookEventForm">
+                  <label>Name</label>
+                  <select name="name">
+                      <option value="user1">User 1</option>
+                      <option value="user2">User 2</option>
+                  </select>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Example Card</h5>
-              <p>This is an examle page with no contrnt. You can use it as a starter for your custom pages.</p>
-            </div>
+                  <label>Address</label>
+                  <input type="text" name="address" placeholder="Enter address">
+
+                  <label>Phone</label>
+                  <input type="text" name="phone" placeholder="Enter phone number">
+
+                  <label>Email</label>
+                  <input type="email" name="email" placeholder="Enter email">
+
+                  <label>Reservation Date</label>
+                  <input type="date" name="reservation_date">
+
+                  <label>Reservation Time</label>
+                  <input type="time" name="reservation_time">
+
+                  <label>Number of People</label>
+                  <input type="number" name="no_of_people" min="1">
+
+                  <button type="submit">Submit</button>
+              </form>
           </div>
-
-        </div>
-
-        <div class="col-lg-6">
-
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Example Card</h5>
-              <p>This is an examle page with no contrnt. You can use it as a starter for your custom pages.</p>
-            </div>
-          </div>
-
-        </div>
       </div>
-    </section>
 
   </main><!-- End #main -->
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
   <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/chart.js/chart.umd.js"></script>
@@ -241,9 +280,48 @@
   <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
-
-  <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: 'fetch_events.php', // URL to fetch events from PHP
+                eventColor: '#378006',
+                dateClick: function(info) {
+                    alert('Clicked on: ' + info.dateStr);
+                }
+            });
+            calendar.render();
+        });
+       
+        $(document).ready(function() {
+    $('#bookEventForm').on('submit', function(event) {
+        event.preventDefault();
+        
+        $.ajax({
+            url: 'submit_event.php',
+            type: 'POST',
+            data: $(this).serialize(),
+            dataType: 'json',  // Expect JSON response
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert(response.message);  // Success message
+                    location.reload();  // Reload the calendar
+                } else {
+                    alert(response.message);  // Error message from PHP
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred: ' + error);  // General AJAX error handling
+            }
+        });
+    });
+});
+
+    </script>
 
 </body>
 
