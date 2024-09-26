@@ -129,30 +129,30 @@
 
       <hr class="sidebar-divider">
 
-            <li class="nav-heading">Event Management System</li>
+        <li class="nav-heading">Event Management System</li>
 
-            <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#system-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-calendar4-event"></i><span>Event Management</span><i class="bi bi-chevron-down ms-auto"></i>
+        <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#system-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-calendar4-event"></i><span>Event Management</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="system-nav" class="nav-content collapse show " data-bs-parent="#sidebar-nav">
+            <li>
+            <li>
+            <a href="eventdash.php">
+                <i class="bi bi-circle"></i><span>Dashboard</span>
             </a>
-            <ul id="system-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-                <li>
-                <li>
-                <a href="eventdash.php">
-                    <i class="bi bi-circle"></i><span>Dashboard</span>
-                </a>
-                </li>
-                <a href="calendar.php" class="active">
-                    <i class="bi bi-circle"></i><span>Event Calendar</span>
-                </a>
-                </li>
-                <li>
-                <a href="eventbooking.php">
-                    <i class="bi bi-circle"></i><span>Event Booking</span>
-                </a>
-                </li>
-            </ul>
-            </li><!-- End System Nav -->
+            </li>
+            <a href="calendar.php" class="active">
+                <i class="bi bi-circle"></i><span>Event Calendar</span>
+            </a>
+            </li>
+            <li>
+            <a href="tables-data.php">
+                <i class="bi bi-circle"></i><span>Event Booking</span>
+            </a>
+            </li>
+        </ul>
+        </li><!-- End System Nav -->
 
 <hr class="sidebar-divider">
 
