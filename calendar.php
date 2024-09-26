@@ -240,32 +240,23 @@
           <div class="book-event-form">
               <h2>Book Event</h2>
               <form id="bookEventForm">
-                  <label>Name</label>
-                  <select name="name">
-                      <option value="user1">User 1</option>
-                      <option value="user2">User 2</option>
-                  </select>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br>
 
-                  <label>Address</label>
-                  <input type="text" name="address" placeholder="Enter address">
+                <label for="contact">Contact (Phone or Email):</label>
+                <input type="text" id="contact" name="contact" required><br>
 
-                  <label>Phone</label>
-                  <input type="text" name="phone" placeholder="Enter phone number">
+                <label for="event_title">Event Title:</label>
+                <input type="text" id="event_title" name="event_title" required><br>
 
-                  <label>Email</label>
-                  <input type="email" name="email" placeholder="Enter email">
+                <label for="event_date">Event Date:</label>
+                <input type="date" id="event_date" name="event_date" required><br>
 
-                  <label>Reservation Date</label>
-                  <input type="date" name="reservation_date">
+                <label for="time">Time:</label>
+                <input type="time" id="time" name="time" required><br>
 
-                  <label>Reservation Time</label>
-                  <input type="time" name="reservation_time">
-
-                  <label>Number of People</label>
-                  <input type="number" name="no_of_people" min="1">
-
-                  <button type="submit">Submit</button>
-              </form>
+                <button type="submit">Book Event</button>
+            </form>
           </div>
       </div>
 
@@ -298,28 +289,49 @@
         });
        
         $(document).ready(function() {
-    $('#bookEventForm').on('submit', function(event) {
-        event.preventDefault();
-        
-        $.ajax({
-            url: 'submit_event.php',
-            type: 'POST',
-            data: $(this).serialize(),
-            dataType: 'json',  // Expect JSON response
-            success: function(response) {
-                if (response.status === 'success') {
-                    alert(response.message);  // Success message
-                    location.reload();  // Reload the calendar
-                } else {
-                    alert(response.message);  // Error message from PHP
+        $('#bookEventForm').on('submit', function(event) {
+            event.preventDefault();
+            
+            $.ajax({
+                url: 'submit_event.php',
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',  // Expect JSON response
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alert(response.message);  // Success message
+                        location.reload();  // Reload the calendar
+                    } else {
+                        alert(response.message);  // Error message from PHP
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred: ' + error);  // General AJAX error handling
                 }
-            },
-            error: function(xhr, status, error) {
-                alert('An error occurred: ' + error);  // General AJAX error handling
-            }
+            });
         });
     });
-});
+
+          $(document).ready(function() {
+            $('.status-form').on('change', function(event) {
+              event.preventDefault();
+              var $form = $(this);
+
+              $.ajax({
+                url: $form.attr('action'),
+                type: $form.attr('method'),
+                data: $form.serialize(),
+                success: function(response) {
+                  alert(response);  // Show a success message (optional)
+                },
+                error: function(xhr, status, error) {
+                  alert("Error updating status: " + error);
+                }
+              });
+            });
+          });
+
+
 
     </script>
 
