@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json'); // Set the response content type to JSON
 
+
 $servername = "localhost";
 $username = "root";
 $password = "";
