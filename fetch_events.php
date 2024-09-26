@@ -1,22 +1,39 @@
+// fetch_events.php
 <?php
-include 'connection.php';
-$pdo = new PDO('mysql:host=localhost;dbname=event_management', 'root', '');
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "bcpevent_db";
 
-$stmt = $pdo->prepare('SELECT id, title, start_date, end_date FROM events');
-$stmt->execute();
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-$events = [];
-
-while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $events[] = [
-        'id' => $row['id'],
-        'title' => $row['title'],
-        'start' => $row['start_date'],
-        'end' => $row['end_date']
-    ];
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-header('Content-Type: application/json');
+// Fetch events with 'Approved' status
+$sql = "SELECT event_title, event_date, time FROM event_db WHERE status = 'Approved'";
+$result = $conn->query($sql);
+
+$events = array();
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // You can push events into an array or directly return them in your desired format
+        $events[] = array(
+            'title' => $row['event_title'],
+            'date' => $row['event_date'],
+            'time' => $row['time'],
+        );
+    }
+} else {
+    echo "No approved events yet.";
+}
+
+$conn->close();
+
+// If this script is meant to return data, you might encode the array in JSON
 echo json_encode($events);
 ?>
-
