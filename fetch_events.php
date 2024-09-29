@@ -33,7 +33,4 @@ if ($result->num_rows > 0) {
 }
 
 $conn->close();
-
-// If this script is meant to return data, you might encode the array in JSON
-echo json_encode($events);
 ?>
