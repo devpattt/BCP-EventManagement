@@ -232,7 +232,7 @@
 
                   $statuses = ['Pending', 'Approved', 'Cancelled'];  // Define available status options
 
-                  $sql = "SELECT id, name, contact, event_title, date_booked, time, booked_at, status FROM event_db";
+                  $sql = "SELECT id, `name`, contact, event_title, date_booked, time, booked_at, status FROM event_db";
                   $result = $conn->query($sql);
 
                   if ($result->num_rows > 0) {
