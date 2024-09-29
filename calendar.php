@@ -249,8 +249,8 @@
                 <label for="event_title">Event Title:</label>
                 <input type="text" id="event_title" name="event_title" required><br>
 
-                <label for="event_date">Event Date:</label>
-                <input type="date" id="event_date" name="event_date" required><br>
+                <label for="date_booked">Event Date:</label>
+                <input type="date" id="date_booked" name="date_booked" required><br>
 
                 <label for="time">Time:</label>
                 <input type="time" id="time" name="time" required><br>
@@ -276,35 +276,32 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                events: 'fetch_events.php', // URL to fetch events from PHP
-                eventColor: '#378006',
-                dateClick: function(info) {
-                    alert('Clicked on: ' + info.dateStr);
-                }
-            });
-            calendar.render();
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: 'fetch_events.php', // URL to fetch events from PHP
+            eventColor: '#378006',
+            dateClick: function(info) {
+                alert('Clicked on: ' + info.dateStr);
+            }
         });
-       
-        $(document).ready(function() {
+        calendar.render();
+    });
+   
+    $(document).ready(function() {
         $('#bookEventForm').on('submit', function(event) {
             event.preventDefault();
-            
+              
             $.ajax({
                 url: 'submit_event.php',
                 type: 'POST',
                 data: $(this).serialize(),
-                dataType: 'json',  // Expect JSON response
+                dataType: 'html',  // Expect HTML response
                 success: function(response) {
-                    if (response.status === 'success') {
-                        alert(response.message);  // Success message
-                        location.reload();  // Reload the calendar
-                    } else {
-                        alert(response.message);  // Error message from PHP
-                    }
+                    // Assuming your PHP script returns a success message in plain text or HTML
+                    alert(response);  // Show the response message
+                    location.reload();  // Reload the calendar
                 },
                 error: function(xhr, status, error) {
                     alert('An error occurred: ' + error);  // General AJAX error handling
@@ -313,28 +310,27 @@
         });
     });
 
-          $(document).ready(function() {
-            $('.status-form').on('change', function(event) {
-              event.preventDefault();
-              var $form = $(this);
+    $(document).ready(function() {
+        $('.status-form').on('change', function(event) {
+            event.preventDefault();
+            var $form = $(this);
 
-              $.ajax({
+            $.ajax({
                 url: $form.attr('action'),
                 type: $form.attr('method'),
                 data: $form.serialize(),
+                dataType: 'html',  // Expect HTML response
                 success: function(response) {
-                  alert(response);  // Show a success message (optional)
+                    alert(response);  // Show a success message (optional)
                 },
                 error: function(xhr, status, error) {
-                  alert("Error updating status: " + error);
+                    alert("Error updating status: " + error);
                 }
-              });
             });
-          });
+        });
+    });
+</script>
 
-
-
-    </script>
 
 </body>
 
