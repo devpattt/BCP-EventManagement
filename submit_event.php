@@ -1,7 +1,4 @@
 <?php
-header('Content-Type: application/json'); // Set the response content type to JSON
-
-
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -12,27 +9,46 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    echo json_encode(['status' => 'error', 'message' => 'Connection failed: ' . $conn->connect_error]);
-    exit();
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Assuming these are coming from a booking form
-$event_title = $_POST['event_title'];
-$event_date = $_POST['event_date'];
-$time = $_POST['time'];
+// User input values
 $name = $_POST['name'];
 $contact = $_POST['contact'];
+$event_title = $_POST['event_title'];
 
-// Set the event status to 'Pending' by default
-$stmt = $conn->prepare("INSERT INTO event_db (name, contact, event_title, time, event_date, status) VALUES (?, ?, ?, ?, ?, 'Pending')");
-$stmt->bind_param("sssss", $name, $contact, $event_title, $event_date, $time); // Bind parameters
+// Validate date_booked
+$date_booked = $_POST['date_booked'];
+if (!DateTime::createFromFormat('Y-m-d', $date_booked)) {
+    die(json_encode(['status' => 'error', 'message' => 'Invalid date format. Expected format: YYYY-MM-DD.']));
+}
 
+if (isset($_POST['time'])) {
+    $time = $_POST['time'] . ':00'; // Append seconds
+    // Validate time format
+    if (!preg_match('/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/', $time)) {
+        die(json_encode(['status' => 'error', 'message' => 'Invalid time format. Expected format: HH:MM:SS.']));
+    }
+} else {
+    die(json_encode(['status' => 'error', 'message' => 'Time is required.']));
+}
+
+
+$status = 'pending'; 
+
+// Prepare and bind
+$stmt = $conn->prepare("INSERT INTO event_db (name, contact, event_title, date_booked, time, status) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssss", $name, $contact, $event_title, $date_booked, $time, $status);
+
+// Execute the statement and check for success
 if ($stmt->execute()) {
-    echo json_encode(['status' => 'success', 'message' => 'New booking created successfully.']);
+    echo json_encode(['Event booked successfully!']);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Error: ' . $stmt->error]);
 }
 
+// Close the statement and connection
 $stmt->close();
 $conn->close();
-
+exit();
+?>
