@@ -4,15 +4,12 @@ $username = "root";
 $password = "";
 $dbname = "bcpevent_db";
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// User input values
 $name = $_POST['name'];
 $contact = $_POST['contact'];
 $event_title = $_POST['event_title'];
