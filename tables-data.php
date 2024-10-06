@@ -211,11 +211,9 @@
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>
                     <th>Id</th>
                     <th>Role</th>
-                    <b>N</b>ame
-                    </th>
+                    <th>Name</th>
                     <th>Contact</th>
                     <th>Event Title</th>
                     <th data-type="date" data-format="YYYY/DD/MM">Date Booked</th>
@@ -251,8 +249,8 @@
                         echo "<td>" . htmlspecialchars($row["name"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["contact"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["event_title"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["at tendees"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["date_booked"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["attendees"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["booked_at"]) . "</td>";
 
