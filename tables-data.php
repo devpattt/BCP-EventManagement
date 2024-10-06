@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+< lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -23,8 +23,37 @@
   <link href="assets/css/style.css" rel="stylesheet">
 
 </head>
+  <style>    
+    .alert-box {
+        position: fixed;
+        top: 150px;
+        right: 550px;
+        background-color: #5cb85c; /* Default color for success */
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+        z-index: 1000;
+    }
+
+    .alert-box.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .alert-box.error {
+        background-color: #d9534f;
+    }
+  </style>
 
 <body>
+
+  <div id="statusMessage" class="alert-box">
+      <span id="messageContent"></span>
+  </div>
 
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
@@ -145,23 +174,27 @@
             <i class="bi bi-circle"></i><span>Report and Analytics</span>
         </a>
         </li>
-        <a href="calendar.php">
-            <i class="bi bi-circle"></i><span>Booking Management</span>
+        <a href="calendar.php" >
+            <i class="bi bi-circle"></i><span>Events Calendar</span>
         </a>
         </li>
         <li>
-        <a href="tables-data.php"  class="active">
-            <i class="bi bi-circle"></i><span>Record Management</span>
+        <a href="tables-data.php" class="active">
+            <i class="bi bi-circle"></i><span>Event Bookings</span>
         </a>
         </li>
         <li>
         <a href="user-management.php">
-            <i class="bi bi-circle"></i><span>User Management</span>
+            <i class="bi bi-circle"></i><span>User Details</span>
+        </a>
+        </li> <li>
+        <a href="#">
+            <i class="bi bi-circle"></i><span>Holidays</span>
         </a>
         </li>
+
       </ul>
       </li><!-- End System Nav -->
-
 
       <li class="nav-heading">Pages</li>
 
@@ -296,6 +329,39 @@
   <script src="assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/js/main.js"></script>
+  <script>
+     window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+
+    if (status === 'success') {
+        showMessage("Status updated successfully!", "success");
+    } else if (status === 'error') {
+        showMessage("Error updating status. Please try again.", "error");
+    }
+    }
+
+    function showMessage(message, type) {
+        const messageBox = document.getElementById("statusMessage");
+        const messageContent = document.getElementById("messageContent");
+
+        messageContent.innerText = message;
+        messageBox.classList.add("show");
+        
+        if (type === "error") {
+            messageBox.classList.add("error");
+        } else {
+            messageBox.classList.remove("error");
+        }
+
+        // Automatically hide after 3 seconds
+        setTimeout(() => {
+            messageBox.classList.remove("show");
+        }, 3000);
+    }
+
+
+</script>
 
 </body>
 

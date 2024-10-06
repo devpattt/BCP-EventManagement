@@ -138,27 +138,31 @@
               <ul id="system-nav" class="nav-content collapse show " data-bs-parent="#sidebar-nav">
                 <li>
                 <li>
-                <a href="eventdash.php"  class="active">
+                <a href="eventdash.php" class="active">
                     <i class="bi bi-circle"></i><span>Report and Analytics</span>
                 </a>
                 </li>
-                <a href="calendar.php">
-                    <i class="bi bi-circle"></i><span>Booking Management</span>
+                <a href="calendar.php" >
+                    <i class="bi bi-circle"></i><span>Events Calendar</span>
                 </a>
                 </li>
                 <li>
                 <a href="tables-data.php">
-                    <i class="bi bi-circle"></i><span>Record Management</span>
+                    <i class="bi bi-circle"></i><span>Event Bookings</span>
                 </a>
                 </li>
                 <li>
                 <a href="user-management.php">
-                    <i class="bi bi-circle"></i><span>User Management</span>
+                    <i class="bi bi-circle"></i><span>User Details</span>
+                </a>
+                </li> <li>
+                <a href="#">
+                    <i class="bi bi-circle"></i><span>Holidays</span>
                 </a>
                 </li>
+
               </ul>
               </li><!-- End System Nav -->
-
 
 
       <hr class="sidebar-divider">
