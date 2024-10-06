@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "bcpevent_db";
+$dbname = "bcp_sms3_ems";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch events with 'Approved' status
-$sql = "SELECT event_title, event_date, time FROM event_db WHERE status = 'Approved'";
+$sql = "SELECT event_title, event_date, time FROM bcp_sms3_booking WHERE status = 'Approved'";
 $result = $conn->query($sql);
 
 $events = array();

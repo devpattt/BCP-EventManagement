@@ -176,7 +176,7 @@
             <i class="bi bi-circle"></i><span>Report and Analytics</span>
         </a>
         </li>
-        <a href="calendar.php" class="active">
+        <a href="calendar.php">
             <i class="bi bi-circle"></i><span>Booking Management</span>
         </a>
         </li>
@@ -186,7 +186,7 @@
         </a>
         </li>
         <li>
-        <a href="user-management.php">
+        <a href="user-management.php" class="active">
             <i class="bi bi-circle"></i><span>User Management</span>
         </a>
         </li>
@@ -231,45 +231,6 @@
 
   <main id="main" class="main">
 
-    <div class="container">
-          <!-- Calendar -->
-          <div id="calendar"></div>
-
-          <!-- Booking Form -->
-          <div class="book-event-form">
-        <h2>Book Event</h2>
-        <form id="bookEventForm">
-            <label for="role">Role:</label>
-            <select id="role" name="role" required>
-                <option value="" disabled selected>Select Role</option>
-                <option value="teacher">Teacher</option>
-                <option value="student">Student</option>
-                <option value="student">Other</option>
-            </select><br>
-
-            <label for="name">Fullname:</label>
-            <input type="text" id="name" name="name" required><br>
-
-            <label for="contact">Contact (Phone or Email):</label>
-            <input type="text" id="contact" name="contact" required><br>
-
-            <label for="event_title">Event Name:</label>
-            <input type="text" id="event_title" name="event_title" required><br>
-
-            <label for="attendees">Attendees:</label>
-            <input type="text" id="attendees" name="attendees" required><br>
-
-            <label for="date_booked">Event Date:</label>
-            <input type="date" id="date_booked" name="date_booked" required><br>
-
-            <label for="time">Time:</label>
-            <input type="time" id="time" name="time" required><br>
-
-            <button type="submit">Book Event</button>
-        </form>
-    </div>
-</div>
-
   </main>
   
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -285,60 +246,5 @@
   <script src="assets/js/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: 'fetch_events.php', // URL to fetch events from PHP
-            eventColor: '#378006',
-        });
-        calendar.render();
-    });
-   
-    $(document).ready(function() {
-        $('#bookEventForm').on('submit', function(event) {
-            event.preventDefault();
-              
-            $.ajax({
-                url: 'submit_event.php',
-                type: 'POST',
-                data: $(this).serialize(),
-                dataType: 'html',  // Expect HTML response
-                success: function(response) {
-                    // Assuming your PHP script returns a success message in plain text or HTML
-                    alert(response);  // Show the response message
-                    location.reload();  // Reload the calendar
-                },
-                error: function(xhr, status, error) {
-                    alert('An error occurred: ' + error);  // General AJAX error handling
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $('.status-form').on('change', function(event) {
-            event.preventDefault();
-            var $form = $(this);
-
-            $.ajax({
-                url: $form.attr('action'),
-                type: $form.attr('method'),
-                data: $form.serialize(),
-                dataType: 'html',  // Expect HTML response
-                success: function(response) {
-                    alert(response);  // Show a success message (optional)
-                },
-                error: function(xhr, status, error) {
-                    alert("Error updating status: " + error);
-                }
-            });
-        });
-    });
-</script>
-
-
 </body>
-
 </html>

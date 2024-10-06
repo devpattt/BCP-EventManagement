@@ -132,30 +132,36 @@
 
         <hr class="sidebar-divider">
 
-        <li class="nav-heading">Event Management System</li>
-  
-        <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#system-nav" data-bs-toggle="collapse" href="#">
-            <i class="bi bi-calendar4-event"></i><span>Event Management</span><i class="bi bi-chevron-down ms-auto"></i>
+      <li class="nav-heading">Event Management System</li>
+
+      <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#system-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-calendar4-event"></i><span>Event Management</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="system-nav" class="nav-content collapse show " data-bs-parent="#sidebar-nav">
+        <li>
+        <li>
+        <a href="eventdash.php">
+            <i class="bi bi-circle"></i><span>Report and Analytics</span>
         </a>
-        <ul id="system-nav" class="nav-content collapse show " data-bs-parent="#sidebar-nav">
-            <li>
-            <li>
-            <a href="eventdash.php">
-                <i class="bi bi-circle"></i><span>Dashboard</span>
-            </a>
-            </li>
-            <a href="calendar.php">
-                <i class="bi bi-circle"></i><span>Event Calendar</span>
-            </a>
-            </li>
-            <li>
-            <a href="tables-data.php" class="active">
-                <i class="bi bi-circle"></i><span>Event Booking</span>
-            </a>
-            </li>
-        </ul>
-        </li><!-- End System Nav -->
+        </li>
+        <a href="calendar.php">
+            <i class="bi bi-circle"></i><span>Booking Management</span>
+        </a>
+        </li>
+        <li>
+        <a href="tables-data.php"  class="active">
+            <i class="bi bi-circle"></i><span>Record Management</span>
+        </a>
+        </li>
+        <li>
+        <a href="user-management.php">
+            <i class="bi bi-circle"></i><span>User Management</span>
+        </a>
+        </li>
+      </ul>
+      </li><!-- End System Nav -->
+
 
       <li class="nav-heading">Pages</li>
 
@@ -207,11 +213,13 @@
                   <tr>
                     <th>
                     <th>Id</th>
+                    <th>Role</th>
                     <b>N</b>ame
                     </th>
                     <th>Contact</th>
                     <th>Event Title</th>
                     <th data-type="date" data-format="YYYY/DD/MM">Date Booked</th>
+                    <th>Attendees</th>
                     <th>Time Booked</th>
                     <th data-type="date" data-format="YYYY/DD/MM">Date</th>
                     <th>Status</th>
@@ -222,7 +230,7 @@
                   $servername = "localhost"; 
                   $username = "root"; 
                   $password = ""; 
-                  $dbname = "bcpevent_db"; 
+                  $dbname = "bcp_sms3_ems"; 
 
                   $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -232,16 +240,18 @@
 
                   $statuses = ['Pending', 'Approved', 'Cancelled'];  // Define available status options
 
-                  $sql = "SELECT id, `name`, contact, event_title, date_booked, time, booked_at, status FROM event_db";
+                  $sql = "SELECT id, `role`, `name`, contact, event_title, attendees, date_booked, time, booked_at, status FROM bcp_sms3_booking";
                   $result = $conn->query($sql);
 
                   if ($result->num_rows > 0) {
                       while($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["role"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["name"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["contact"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["event_title"]) . "</td>";
+                        echo "<td>" . htmlspecialchars($row["at tendees"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["date_booked"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["booked_at"]) . "</td>";

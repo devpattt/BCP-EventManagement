@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "bcpevent_db";
+$dbname = "bcp_sms3_ems";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -34,7 +34,7 @@ if (isset($_POST['time'])) {
 $status = 'pending'; 
 
 // Prepare and bind
-$stmt = $conn->prepare("INSERT INTO event_db (name, contact, event_title, date_booked, time, status) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO bcp_sms3_booking (role, name, contact, event_title, attendees, date_booked, time, status) VALUES (?, ?, ?, ?, ?, ?)");
 $stmt->bind_param("ssssss", $name, $contact, $event_title, $date_booked, $time, $status);
 
 // Execute the statement and check for success
