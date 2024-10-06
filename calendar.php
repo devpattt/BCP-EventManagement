@@ -241,38 +241,58 @@
           <div id="calendar"></div>
 
           <!-- Booking Form -->
+         <!-- Booking Form -->
           <div class="book-event-form">
-        <h2>Book Event</h2>
-        <form id="bookEventForm">
-            <label for="role">Role:</label>
-            <select id="role" name="role" required>
+            <h2>Book Event</h2>
+            <form id="bookEventForm">
+              <label for="role">Role:</label>
+              <select id="role" name="role" required>
                 <option value="" disabled selected>Select Role</option>
                 <option value="teacher">Teacher</option>
                 <option value="student">Student</option>
                 <option value="other">Other</option>
-            </select><br>
-            <label for="name">Fullname:</label>
-            <input type="text" id="name" name="name" required><br>
+              </select><br>
+              <label for="name">Fullname:</label>
+              <input type="text" id="name" name="name" required><br>
 
-            <label for="contact">Contact (Phone or Email):</label>
-            <input type="text" id="contact" name="contact" required><br>
+              <label for="contact">Contact (Phone or Email):</label>
+              <input type="text" id="contact" name="contact" required><br>
 
-            <label for="event_title">Event Name:</label>
-            <input type="text" id="event_title" name="event_title" required><br>
+              <label for="event_title">Event Name:</label>
+              <input type="text" id="event_title" name="event_title" required><br>
 
-            <label for="attendees">Attendees:</label>
-            <input type="text" id="attendees" name="attendees" required><br>
+              <label for="attendees">Attendees:</label>
+              <input type="text" id="attendees" name="attendees" required><br>
 
-            <label for="date_booked">Event Date:</label>
-            <input type="date" id="date_booked" name="date_booked" required><br>
+              <label for="date_booked">Event Date:</label>
+              <input type="date" id="date_booked" name="date_booked" required><br>
 
-            <label for="time">Time:</label>
-            <input type="time" id="time" name="time" required><br>
+              <label for="time">Time:</label>
+              <input type="time" id="time" name="time" required><br>
 
-            <button type="submit">Book Event</button>
-        </form>
+              <button type="button" id="bookEventBtn" data-bs-toggle="modal" data-bs-target="#confirmationModal">Book Event</button>
+            </form>
+          </div>
+
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmationModalLabel">Confirm Booking</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to book this event?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="confirmBookingButton">Confirm</button>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
 
   </main>
   
@@ -340,9 +360,34 @@
             });
         });
     });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    $('#confirmBookingButton').on('click', function() {
+      var form = $('#bookEventForm');
+
+      $.ajax({
+        url: 'submit_event.php',
+        type: 'POST',
+        data: form.serialize(),
+        dataType: 'html',
+        success: function(response) {
+          alert(response); // Show the response message
+          location.reload(); // Reload the calendar or update as needed
+        },
+        error: function(xhr, status, error) {
+          alert('An error occurred: ' + error); // General AJAX error handling
+        }
+      });
+
+      // Hide the modal after confirmation
+      $('#confirmationModal').modal('hide');
+    });
+  });
+
+  
 </script>
 
-
+  
 </body>
 
 </html>
