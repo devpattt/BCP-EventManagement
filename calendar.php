@@ -32,10 +32,10 @@
             padding: 20px;
         }
         #calendar {
-            width: 70%;
+            width: 68%;
         }
         .book-event-form {
-            width: 25%;
+            width: 28%;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -244,9 +244,8 @@
                 <option value="" disabled selected>Select Role</option>
                 <option value="teacher">Teacher</option>
                 <option value="student">Student</option>
-                <option value="student">Other</option>
+                <option value="other">Other</option>
             </select><br>
-
             <label for="name">Fullname:</label>
             <input type="text" id="name" name="name" required><br>
 
