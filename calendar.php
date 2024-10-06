@@ -23,7 +23,7 @@
 </head>
 
 <style> 
- body {
+  body {
             font-family: Arial, sans-serif;
         }
         .container {
@@ -51,7 +51,7 @@
         .book-event-form button {
             width: 100%;
             padding: 10px;
-            background-color: teal;
+            background-color:  #012970;
             color: white;
             border: none;
             cursor: pointer;
@@ -59,6 +59,7 @@
         .book-event-form button:hover {
             background-color: darkcyan;
         }
+        
 </style>
 <body>
   <header id="header" class="header fixed-top d-flex align-items-center">
@@ -270,7 +271,7 @@
               <label for="time">Time:</label>
               <input type="time" id="time" name="time" required><br>
 
-              <button type="button" id="bookEventBtn" data-bs-toggle="modal" data-bs-target="#confirmationModal">Book Event</button>
+              <button type="button" id="bookEventBtn" data-bs-toggle="modal" data-bs-target="#confirmationModal">Submit</button>
             </form>
           </div>
 
