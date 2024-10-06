@@ -7,7 +7,7 @@ $dbname = "bcp_sms3_ems";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(['status' => 'error', 'message' => 'Connection failed: ' . $conn->connect_error]));
 }
 
 $name = $_POST['name'];
@@ -31,18 +31,28 @@ if (isset($_POST['time'])) {
 }
 
 
+$role = isset($_POST['role']) ? $_POST['role'] : '';
+if (empty($role)) {
+    die(json_encode(['status' => 'error', 'message' => 'Role is required.']));
+}
+
+
 $status = 'pending'; 
 
+$attendees = isset($_POST['attendees']) && is_numeric($_POST['attendees']) ? $_POST['attendees'] : 0;
+
+
 // Prepare and bind
-$stmt = $conn->prepare("INSERT INTO bcp_sms3_booking (role, name, contact, event_title, attendees, date_booked, time, status) VALUES (?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("ssssss", $name, $contact, $event_title, $date_booked, $time, $status);
+$stmt = $conn->prepare("INSERT INTO bcp_sms3_booking (role, name, contact, event_title, attendees, date_booked, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssssss", $role, $name, $contact, $event_title, $attendees, $date_booked, $time, $status);
 
 // Execute the statement and check for success
 if ($stmt->execute()) {
-    echo json_encode(['Event booked successfully!']);
+    echo json_encode(['status' => 'success', 'message' => 'Event booked successfully!']);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Error: ' . $stmt->error]);
 }
+
 
 // Close the statement and connection
 $stmt->close();
