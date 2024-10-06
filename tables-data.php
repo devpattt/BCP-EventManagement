@@ -225,112 +225,127 @@
 
   <main id="main" class="main">
 
-    <div class="pagetitle">
-      <h1>Event Bookings</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item">Tables</li>
-          <li class="breadcrumb-item active">Data</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
+<div class="pagetitle">
+  <h1>Event Bookings</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item">Tables</li>
+      <li class="breadcrumb-item active">Data</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
 
-    <section class="section">
-      <div class="row">
-        <div class="col-lg-12">
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+          <!-- Table with stripped rows -->
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Role</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Event Title</th>
+                <th data-type="date" data-format="YYYY/DD/MM">Date Booked</th>
+                <th>Attendees</th>
+                <th>Time Booked</th>
+                <th data-type="date" data-format="YYYY/DD/MM">Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+            <?php
+              $servername = "localhost"; 
+              $username = "root"; 
+              $password = ""; 
+              $dbname = "bcp_sms3_ems"; 
 
-              <!-- Table with stripped rows -->
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th>Id</th>
-                    <th>Role</th>
-                    <th>Name</th>
-                    <th>Contact</th>
-                    <th>Event Title</th>
-                    <th data-type="date" data-format="YYYY/DD/MM">Date Booked</th>
-                    <th>Attendees</th>
-                    <th>Time Booked</th>
-                    <th data-type="date" data-format="YYYY/DD/MM">Date</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                <?php
-                  $servername = "localhost"; 
-                  $username = "root"; 
-                  $password = ""; 
-                  $dbname = "bcp_sms3_ems"; 
+              $conn = new mysqli($servername, $username, $password, $dbname);
 
-                  $conn = new mysqli($servername, $username, $password, $dbname);
+              if ($conn->connect_error) {
+                  die("Connection failed: " . $conn->connect_error);
+              }
 
-                  if ($conn->connect_error) {
-                      die("Connection failed: " . $conn->connect_error);
-                  }
+              $statuses = ['Pending', 'Approved', 'Cancelled'];  // Define available status options
 
-                  $statuses = ['Pending', 'Approved', 'Cancelled'];  // Define available status options
+              $sql = "SELECT id, `role`, `name`, contact, event_title, attendees, date_booked, time, booked_at, status FROM bcp_sms3_booking";
+              $result = $conn->query($sql);
 
-                  $sql = "SELECT id, `role`, `name`, contact, event_title, attendees, date_booked, time, booked_at, status FROM bcp_sms3_booking";
-                  $result = $conn->query($sql);
+              if ($result->num_rows > 0) {
+                  while($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["role"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["name"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["contact"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["event_title"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["date_booked"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["attendees"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["booked_at"]) . "</td>";
 
-                  if ($result->num_rows > 0) {
-                      while($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["role"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["name"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["contact"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["event_title"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["date_booked"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["attendees"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["booked_at"]) . "</td>";
+                    // Add a form for changing the status
+                    echo "<td>";
+                    echo "<form method='POST' action='update_status.php' class='status-form'>"; // Keep the form action as it is
+                    echo "<input type='hidden' name='event_id' value='" . htmlspecialchars($row["id"]) . "'>";  // Event ID (assuming you have an id column)
+                    echo "<select name='status' onchange='openModal(this)'>"; // Update here
 
-                        // Add a form for changing the status
-                        echo "<td>";
-                        echo "<form method='POST' action='update_status.php' class='status-form'>";
-                        echo "<input type='hidden' name='event_id' value='" . htmlspecialchars($row["id"]) . "'>";  // Event ID (assuming you have an id column)
-                        echo "<select name='status' onchange='this.form.submit()'>";
-
-                        foreach ($statuses as $status) {
-                          $selected = ($status == $row["status"]) ? "selected" : "";  // Mark the current status as selected
-                          echo "<option value='$status' $selected>$status</option>";
-                        }
-
-                        echo "</select>";
-                        echo "</form>";
-                        echo "</td>";
-
-                        echo "</tr>";
-                      }
+                    foreach ($statuses as $status) {
+                      $selected = ($status == $row["status"]) ? "selected" : "";  // Mark the current status as selected
+                      echo "<option value='$status' $selected>$status</option>";
                     }
-                  ?>
-                </tbody>
-              </table>
-              <!-- End Table with stripped rows -->
 
-            </div>
-          </div>
+                    echo "</select>";
+                    echo "</form>";
+                    echo "</td>";
 
+                    echo "</tr>";
+                  }
+                }
+              ?>
+            </tbody>
+          </table>
+          <!-- End Table with stripped rows -->
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
+</main><!-- End #main -->
 
-  </main><!-- End #main -->
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="confirmationModalLabel">Confirm Status Change</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      Are you sure you want to change the status?
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-primary" id="confirmButton">Confirm</button>
+    </div>
+  </div>
+</div>
+</div>
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="assets/vendor/echarts/echarts.min.js"></script>
-  <script src="assets/vendor/quill/quill.js"></script>
-  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script>
-     window.onload = function() {
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/chart.js/chart.umd.js"></script>
+<script src="assets/vendor/echarts/echarts.min.js"></script>
+<script src="assets/vendor/quill/quill.js"></script>
+<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+ window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get('status');
 
@@ -339,30 +354,35 @@
     } else if (status === 'error') {
         showMessage("Error updating status. Please try again.", "error");
     }
-    }
+ }
 
-    function showMessage(message, type) {
-        const messageBox = document.getElementById("statusMessage");
-        const messageContent = document.getElementById("messageContent");
+function showMessage(message, type) {
+    const messageBox = document.getElementById('statusMessage');
+    const messageContent = document.getElementById('messageContent');
 
-        messageContent.innerText = message;
-        messageBox.classList.add("show");
-        
-        if (type === "error") {
-            messageBox.classList.add("error");
-        } else {
-            messageBox.classList.remove("error");
-        }
+    messageContent.textContent = message;
+    messageBox.className = `alert-box ${type === 'error' ? 'error' : ''} show`;
+    
+    setTimeout(() => {
+        messageBox.classList.remove('show');
+    }, 3000);
+}
 
-        // Automatically hide after 3 seconds
-        setTimeout(() => {
-            messageBox.classList.remove("show");
-        }, 3000);
-    }
+function openModal(selectElement) {
+    const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    const confirmButton = document.getElementById('confirmButton');
 
+    // Store the select element and value
+    const selectedValue = selectElement.value;
+    const eventId = selectElement.closest('form').querySelector('input[name="event_id"]').value;
 
+    confirmButton.onclick = function() {
+        // Update the form with the selected value and submit it
+        selectElement.closest('form').submit();
+    };
+
+    modal.show();
+}
 </script>
-
 </body>
-
 </html>
