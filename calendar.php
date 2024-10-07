@@ -249,9 +249,9 @@
               <label for="role">Role:</label>
               <select id="role" name="role" required>
                 <option value="" disabled selected>Select Role</option>
-                <option value="teacher">Teacher</option>
-                <option value="student">Student</option>
-                <option value="other">Other</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Student">Student</option>
+                <option value="Other">Other</option>
               </select><br>
               <label for="name">Fullname:</label>
               <input type="text" id="name" name="name" required><br>
@@ -311,15 +311,21 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: 'fetch_events.php', // URL to fetch events from PHP
-            eventColor: '#378006',
-        });
-        calendar.render();
+
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: 'fetch_events.php',  // URL to fetch events
+        eventColor: '#378006', // Customize the color of events
+        eventTextColor: '#fff', // Customize the text color of events
+        editable: false, // Makes events non-editable (if required)
+        displayEventTime: false, // Hides the time in month view
     });
+    calendar.render();
+});
+
+
    
     $(document).ready(function() {
         $('#bookEventForm').on('submit', function(event) {
