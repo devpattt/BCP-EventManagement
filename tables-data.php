@@ -244,14 +244,12 @@
             <thead>
               <tr>
                 <th>Id</th>
-                <th>Role</th>
                 <th>Name</th>
                 <th>Contact</th>
                 <th>Event Title</th>
-                <th data-type="date" data-format="YYYY/DD/MM">Date Booked</th>
-                <th>Attendees</th>
-                <th>Time Booked</th>
-                <th data-type="date" data-format="YYYY/DD/MM">Date</th>
+                <th data-type="date" data-format="YYYY/DD/MM">Reservation Date</th>
+                <th>No. of people</th>
+                <th>Reservation Date</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -277,14 +275,12 @@
                   while($row = $result->fetch_assoc()) {
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
-                    echo "<td>" . htmlspecialchars($row["role"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["name"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["contact"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["event_title"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["date_booked"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["attendees"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
-                    echo "<td>" . htmlspecialchars($row["booked_at"]) . "</td>";
 
                     // Add a form for changing the status
                     echo "<td>";
@@ -371,18 +367,26 @@ function showMessage(message, type) {
 function openModal(selectElement) {
     const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
     const confirmButton = document.getElementById('confirmButton');
+    const form = selectElement.closest('form');
 
-    // Store the select element and value
+    // Store the selected value and event ID (if needed)
     const selectedValue = selectElement.value;
-    const eventId = selectElement.closest('form').querySelector('input[name="event_id"]').value;
+    const eventId = form.querySelector('input[name="event_id"]').value;
 
+    // Remove any previous confirm button event listeners to avoid multiple submissions
     confirmButton.onclick = function() {
-        // Update the form with the selected value and submit it
-        selectElement.closest('form').submit();
+        form.submit();  // Only submit the form when "Confirm" is clicked
     };
 
+    // Show the modal
     modal.show();
+
+    // Reset the select to the previous value when the modal is canceled
+    modal._element.addEventListener('hidden.bs.modal', function () {
+        form.reset();  // Reset the form (including the select element) when modal is hidden
+    });
 }
+
 </script>
 </body>
 </html>
