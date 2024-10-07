@@ -1,37 +1,28 @@
 <?php
-header('Content-Type: application/json');
+// fetch_events.php
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bcp_sms3_ems";
+// Database connection
+$connection = new mysqli("localhost", "root", "", "bcp_sms3_ems");
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
+if ($connection->connect_error) {
+    die("Connection failed: " . $connection->connect_error);
 }
 
-// Fetch events with 'Approved' status
-$sql = "SELECT event_title, event_date, time FROM bcp_sms3_booking WHERE status = 'Approved'";
-$result = $conn->query($sql);
+// Query to fetch only approved events from your event table
+$sql = "SELECT id, event_title AS title, date_booked AS start FROM bcp_sms3_booking WHERE status = 'approved'";
+$result = $connection->query($sql);
 
 $events = array();
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $events[] = array(
-            'title' => $row['event_title'],
-            'date' => $row['event_date'],
-            'time' => $row['time'],
-        );
+        // Push each approved event into the $events array
+        $events[] = $row;
     }
-} else {
-    $events[] = ["message" => "No approved events yet."];
 }
 
+// Return the approved events in JSON format
 echo json_encode($events);
-$conn->close();
+
+$connection->close();
 ?>
