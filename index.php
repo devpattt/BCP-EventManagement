@@ -19,12 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = $stmt->fetch();
 
         // Check if user exists
-        if ($user && password_verify($password, $user['password'])) {
-            // Password is correct, set session and redirect
-            $_SESSION['accountId'] = $accountId; // Store account ID in session
-            header("Location: eventdash.php"); // Redirect to dashboard
-            exit();
+        if ($user) {
+            // Verify password against the hashed password stored in the database
+            if (password_verify($password, $user['password'])) {
+                // Password is correct, set session and redirect
+                $_SESSION['accountId'] = $accountId; // Store account ID in session
+                header("Location: eventdash.php"); // Redirect to dashboard
+                exit();
+            } else {
+                // Invalid password, do not specify which is wrong  
+                $error = 'Invalid password!';
+            }
         } else {
+            // Account ID not found
             $error = 'Invalid account ID or password!';
         }
     }
@@ -33,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Close the connection
 $conn = null; 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -55,7 +61,7 @@ $conn = null;
         <h2>Log Into Your Account</h2>
         <?php if (!empty($error)): ?>
             <div class="error-message" style="color: red;">
-                <?= $error ?>
+                <?= htmlspecialchars($error) ?> <!-- Escape error message for safety -->
             </div>
         <?php endif; ?>
         <form id="loginForm" action="index.php" method="post">

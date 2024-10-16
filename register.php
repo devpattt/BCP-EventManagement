@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'connection.php'; 
+include 'connection.php'; // Ensure this is included correctly
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Collect and validate input data
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt) {
         echo "<script>
                 window.onload = function() {
-                    var modal = new bootstrap.Modal(document.getElementById('successModal'));s
+                    var modal = new bootstrap.Modal(document.getElementById('successModal'));
                     modal.show();
                 };
               </script>";
