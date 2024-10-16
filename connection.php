@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';  
-$db   = 'bcpevent_db'; 
+$db   = 'bcp_sms3_ems'; 
 $user = 'root';  
 $pass = '';  
 $charset = 'utf8mb4';

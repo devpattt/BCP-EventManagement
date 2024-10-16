@@ -133,34 +133,11 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <div class="flex items-center w-full p-1 pl-6" style="display: flex; align-items: center; padding: 3px; width: 40px; background-color: transparent; height: 4rem;">
-        <div class="flex items-center justify-center" style="display: flex; align-items: center; justify-content: center;">
-            <img src="https://elc-public-images.s3.ap-southeast-1.amazonaws.com/bcp-olp-logo-mini2.png" alt="Logo" style="width: 30px; height: auto;">
-        </div>
-      </div>
-
-      <div style="display: flex; flex-direction: column; align-items: center; padding: 16px;">
-        <div style="display: flex; align-items: center; justify-content: center; width: 96px; height: 96px; border-radius: 50%; background-color: #334155; color: #e2e8f0; font-size: 48px; font-weight: bold; text-transform: uppercase; line-height: 1;">
-            LC
-        </div>
-        <div style="display: flex; flex-direction: column; align-items: center; margin-top: 24px; text-align: center;">
-            <div style="font-weight: 500; color: #fff;">
-                Name
-            </div>
-            <div style="margin-top: 4px; font-size: 14px; color: #fff;">
-                ID
-            </div>
-        </div>
-    </div>
-
-    <hr class="sidebar-divider">
-
-      <li class="nav-item">
-        <a class="nav-link " href="pages-blank.html">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li>
+   
+    <ul class="sidebar-nav" id="sidebar-nav">
+    <div class="logo-container" style="text-align: center; margin-bottom: 10px;">
+    <img src="assets/img/bcp logo.png" alt="Logo" style="width: 100px; height: auto;">
+</div>
 
       <hr class="sidebar-divider">
 
@@ -186,52 +163,11 @@
             <i class="bi bi-circle"></i><span>Event Bookings</span>
         </a>
         </li>
-        <li>
-        <a href="user-management.php">
-            <i class="bi bi-circle"></i><span>User Details</span>
-        </a>
-        </li> <li>
-        <a href="#">
-            <i class="bi bi-circle"></i><span>Holidays</span>
-        </a>
-        </li>
-
       </ul>
       </li><!-- End System Nav -->
 
       <hr class="sidebar-divider">
 
-      <li class="nav-heading">Pages</li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
-          <i class="bi bi-card-list"></i>
-          <span>Register</span>
-        </a>
-      </li><!-- End Register Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-login.html">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span>Login</span>
-        </a>
-      </li><!-- End Login Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
-          <i class="bi bi-file-earmark"></i>
-          <span>Blank</span>
-        </a>
-      </li><!-- End Blank Page Nav -->
-
-    </ul>
 
   </aside><!-- End Sidebar-->
 
@@ -246,13 +182,6 @@
           <div class="book-event-form">
             <h2>Book Event</h2>
             <form id="bookEventForm">
-              <label for="role">Role:</label>
-              <select id="role" name="role" required>
-                <option value="" disabled selected>Select Role</option>
-                <option value="Teacher">Teacher</option>
-                <option value="Student">Student</option>
-                <option value="Other">Other</option>
-              </select><br>
               <label for="name">Fullname:</label>
               <input type="text" id="name" name="name" required><br>
 
@@ -262,7 +191,7 @@
               <label for="event_title">Event Name:</label>
               <input type="text" id="event_title" name="event_title" required><br>
 
-              <label for="attendees">Attendees:</label>
+              <label for="attendees">No of people:</label>
               <input type="text" id="attendees" name="attendees" required><br>
 
               <label for="date_booked">Event Date:</label>

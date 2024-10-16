@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-< lang="en">
+<lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -28,7 +28,7 @@
         position: fixed;
         top: 150px;
         right: 550px;
-        background-color: #5cb85c; /* Default color for success */
+        background-color: #5cb85c; 
         color: white;
         padding: 15px;
         border-radius: 5px;
@@ -55,12 +55,11 @@
       <span id="messageContent"></span>
   </div>
 
-  <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
       <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    </div>
 
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
@@ -129,35 +128,14 @@
   <!-- ======= Sidebar ======= -->
   <aside id="sidebar" class="sidebar">
 
-    <ul class="sidebar-nav" id="sidebar-nav">
+  
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <div class="logo-container" style="text-align: center; margin-bottom: 10px;">
+    <img src="assets/img/bcp logo.png" alt="Logo" style="width: 100px; height: auto;">
+</div>
 
-      <div class="flex items-center w-full p-1 pl-6" style="display: flex; align-items: center; padding: 3px; width: 40px; background-color: transparent; height: 4rem;">
-        <div class="flex items-center justify-center" style="display: flex; align-items: center; justify-content: center;">
-            <img src="https://elc-public-images.s3.ap-southeast-1.amazonaws.com/bcp-olp-logo-mini2.png" alt="Logo" style="width: 30px; height: auto;">
-        </div>
-      </div>
 
-      <div style="display: flex; flex-direction: column; align-items: center; padding: 16px;">
-        <div style="display: flex; align-items: center; justify-content: center; width: 96px; height: 96px; border-radius: 50%; background-color: #334155; color: #e2e8f0; font-size: 48px; font-weight: bold; text-transform: uppercase; line-height: 1;">
-            LC
-        </div>
-        <div style="display: flex; flex-direction: column; align-items: center; margin-top: 24px; text-align: center;">
-            <div style="font-weight: 500; color: #fff;">
-                Name
-            </div>
-            <div style="margin-top: 4px; font-size: 14px; color: #fff;">
-                ID
-            </div>
-        </div>
-    </div>
-
-    <hr class="sidebar-divider">
-
-      <li class="nav-item">
-        <a class="nav-link " href="pages-blank.html">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
+   
 
         <hr class="sidebar-divider">
 
@@ -183,44 +161,11 @@
             <i class="bi bi-circle"></i><span>Event Bookings</span>
         </a>
         </li>
-        <li>
-        <a href="user-management.php">
-            <i class="bi bi-circle"></i><span>User Details</span>
-        </a>
-        </li> <li>
-        <a href="#">
-            <i class="bi bi-circle"></i><span>Holidays</span>
-        </a>
-        </li>
-
       </ul>
       </li><!-- End System Nav -->
 
-      <li class="nav-heading">Pages</li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
-          <i class="bi bi-card-list"></i>
-          <span>Register</span>
-        </a>
-      </li><!-- End Register Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-login.html">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span>Login</span>
-        </a>
-      </li><!-- End Login Page Nav -->
-
-    </ul>
-
+     
+      <hr class="sidebar-divider">  
   </aside><!-- End Sidebar-->
 
   <main id="main" class="main">
@@ -268,7 +213,7 @@
 
               $statuses = ['Pending', 'Approved', 'Cancelled'];  // Define available status options
 
-              $sql = "SELECT id, `role`, `name`, contact, event_title, attendees, date_booked, time, booked_at, status FROM bcp_sms3_booking";
+              $sql = "SELECT id, `name`, contact, event_title, attendees, date_booked, time, booked_at, status FROM bcp_sms3_booking";
               $result = $conn->query($sql);
 
               if ($result->num_rows > 0) {
