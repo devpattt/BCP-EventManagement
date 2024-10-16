@@ -80,7 +80,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="index.php">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -310,24 +310,26 @@
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/js/main.js"></script>
   <script>
-    // Fetch data from the backend PHP script
-    fetch('/BCP-EventManagement/dashboard_data.php')
-    // Adjust the path to your PHP file
-      .then(response => response.json())  // Parse the JSON response
-      .then(data => {
-        // Update today's event name and attendees
-        document.getElementById('today-count').textContent = data.todayEvent.event_title || 'No event today';
-        document.getElementById('today-increase').textContent = data.todayEvent.attendees || 0;
+   fetch('/BCP-EventManagement/dashboard_data.php') // Adjust this URL based on your folder structure
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Ensure your data structure matches this
+    document.getElementById('today-count').textContent = data.todayEvent.event_title || 'No event today';
+    document.getElementById('today-increase').textContent = data.todayEvent.attendees || 0;
 
-        // Update month data (total number of events and attendees)
-        document.getElementById('month-count').textContent = data.monthData.event_count || 0;
-        document.getElementById('month-increase').textContent = data.monthData.total_attendees || 0;
+    document.getElementById('month-count').textContent = data.monthData.event_count || 0;
+    document.getElementById('month-increase').textContent = data.monthData.total_attendees || 0;
 
-        // Update year data (total number of events and attendees)
-        document.getElementById('year-count').textContent = data.yearData.event_count || 0;
-        document.getElementById('year-increase').textContent = data.yearData.total_attendees || 0;
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    document.getElementById('year-count').textContent = data.yearData.event_count || 0;
+    document.getElementById('year-increase').textContent = data.yearData.total_attendees || 0;
+  })
+  .catch(error => console.error('Error fetching data:', error));
+
 </script>
 
 

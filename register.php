@@ -1,3 +1,54 @@
+<?php
+session_start();
+include 'connection.php'; 
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Collect and validate input data
+    $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $accountId = filter_input(INPUT_POST, 'AccountId', FILTER_SANITIZE_NUMBER_INT);
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['cpassword'];
+
+    if (!$email) {
+        echo "<script>alert('Invalid email address!');</script>";
+        exit;
+    }
+
+    if (!preg_match('/^\d{6}$/', $accountId)) {
+        echo "<script>alert('Account ID must be exactly 6 digits!');</script>";
+        exit;
+    }
+
+    if (!preg_match('/^(?=.*[A-Z])(?=.*[\W_]).{8,}$/', $password)) {
+        echo "<script>alert('Password must contain at least 8 characters, one uppercase letter, and one special character!');</script>";
+        exit;
+    }
+
+    if ($password !== $confirmPassword) {
+        echo "<script>alert('Passwords do not match!');</script>";
+        exit;
+    }
+
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Prepare and execute SQL query using prepared statements
+    $stmt = $conn->prepare("INSERT INTO bcp_sms3_useracc (Fname, Email, accountId, password) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$fullname, $email, $accountId, $hashedPassword]);
+
+    if ($stmt) {
+        echo "<script>
+                window.onload = function() {
+                    var modal = new bootstrap.Modal(document.getElementById('successModal'));s
+                    modal.show();
+                };
+              </script>";
+    }
+
+    // Close the connection
+    $conn = null; 
+}
+?>
 
 
 <!DOCTYPE html>
@@ -5,11 +56,13 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Event Management System</title>
+  <title>Clinic Management System</title>
   <link href="assets/img/bcp logo.png" rel="icon">
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
 </head>
 
 <style> 
@@ -155,7 +208,29 @@
     </div>
   </main>
 
+<!-- Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="successModalLabel">Registration Success</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Your registration was successful!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="window.location.href='register.php';" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
     document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById("registrationForm");
@@ -355,6 +430,21 @@ function checkAccountId() {
         document.getElementById('AccountId').classList.remove('is-invalid');
     }
 }
+
+let emailTimer, accountIdTimer;
+document.getElementById('email').addEventListener('input', function() {
+    clearTimeout(emailTimer);
+    emailTimer = setTimeout(checkEmail, 500); // Trigger after 500ms of inactivity
+});
+
+document.getElementById('AccountId').addEventListener('input', function() {
+    clearTimeout(accountIdTimer);
+    accountIdTimer = setTimeout(checkAccountId, 500); // Trigger after 500ms of inactivity
+});
+
+
+
+
 </script>
 
 </body>
