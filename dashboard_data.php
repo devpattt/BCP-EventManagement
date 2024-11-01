@@ -21,7 +21,7 @@ try {
     $stmtYear->execute(['currentYear' => "$currentYear%"]);
     $yearData = $stmtYear->fetch(PDO::FETCH_ASSOC);
 
-    $response = [
+    $response = [ 
         'todayEvent' => $todayEvent ?: ['event_title' => 'No events today', 'attendees' => 0],
         'monthData' => $monthData ?: ['event_count' => 0, 'total_attendees' => 0],
         'yearData' => $yearData ?: ['event_count' => 0, 'total_attendees' => 0],
