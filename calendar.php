@@ -197,7 +197,6 @@ include 'fetchname.php';
           <div id="calendar"></div>
 
           <!-- Booking Form -->
-         <!-- Booking Form -->
           <div class="book-event-form">
             <h2>Book Event</h2>
             <form id="bookEventForm">

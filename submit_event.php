@@ -30,21 +30,14 @@ if (isset($_POST['time'])) {
     die(json_encode(['status' => 'error', 'message' => 'Time is required.']));
 }
 
-
-$role = isset($_POST['role']) ? $_POST['role'] : '';
-if (empty($role)) {
-    die(json_encode(['status' => 'error', 'message' => 'Role is required.']));
-}
-
-
 $status = 'pending'; 
 
 $attendees = isset($_POST['attendees']) && is_numeric($_POST['attendees']) ? $_POST['attendees'] : 0;
 
 
 // Prepare and bind
-$stmt = $conn->prepare("INSERT INTO bcp_sms3_booking (role, name, contact, event_title, attendees, date_booked, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("ssssssss", $role, $name, $contact, $event_title, $attendees, $date_booked, $time, $status);
+$stmt = $conn->prepare("INSERT INTO bcp_sms3_booking (name, contact, event_title, attendees, date_booked, time, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssssss",  $name, $contact, $event_title, $attendees, $date_booked, $time, $status);
 
 // Execute the statement and check for success
 if ($stmt->execute()) {
