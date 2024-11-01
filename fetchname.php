@@ -13,20 +13,17 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch user data
-$accountId = $_SESSION['accountId']; // Assuming the user's ID is stored in the session
+$accountId = $_SESSION['accountId']; 
 
 $sql = "SELECT Fname FROM bcp_sms3_useracc WHERE accountId = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $accountId); // Assuming ID is an integer
+$stmt->bind_param("i", $accountId);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -35,10 +32,9 @@ if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $fullname = $row['Fname'];
 } else {
-    $fullname = "User"; // Fallback name if not found
+    $fullname = "User"; 
 }
 
-// Close connections
 $stmt->close();
 $conn->close();
 ?>

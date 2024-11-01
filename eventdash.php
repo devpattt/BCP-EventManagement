@@ -18,27 +18,25 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query to count bookings grouped by month
 $sql = "SELECT MONTH(date_booked) AS month, COUNT(*) AS booking_count
         FROM bcp_sms3_booking
-        WHERE YEAR(date_booked) = YEAR(CURRENT_DATE())  -- Current year
+        WHERE YEAR(date_booked) = YEAR(CURRENT_DATE())  
         GROUP BY MONTH(date_booked)
         ORDER BY MONTH(date_booked)";
 
 $result = $conn->query($sql);
 
-$bookingCounts = array_fill(0, 12, 0); // Initialize array for 12 months
+$bookingCounts = array_fill(0, 12, 0); 
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $bookingCounts[$row['month'] - 1] = $row['booking_count']; // Store counts in corresponding month index
+        $bookingCounts[$row['month'] - 1] = $row['booking_count'];
     }
 }
 
 $conn->close();
 ?>
 
-<!-- Pass data to JavaScript -->
 <script>
   const bookingCounts = <?php echo json_encode($bookingCounts); ?>;
 </script>
@@ -340,6 +338,7 @@ $conn->close();
 </div><!-- End Reports -->
 
   </main><!-- End #main -->
+  
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -351,7 +350,7 @@ $conn->close();
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/js/main.js"></script>
   <script>
-   fetch('/BCP-EventManagement/dashboard_data.php') // Adjust this URL based on your folder structure
+   fetch('/BCP-EventManagement/dashboard_data.php')
   .then(response => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -359,7 +358,7 @@ $conn->close();
     return response.json();
   })
   .then(data => {
-    // Ensure your data structure matches this
+
     document.getElementById('today-count').textContent = data.todayEvent.event_title || 'No event today';
     document.getElementById('today-increase').textContent = data.todayEvent.attendees || 0;
 

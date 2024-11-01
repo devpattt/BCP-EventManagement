@@ -263,11 +263,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        events: 'fetch_events.php',  // URL to fetch events
-        eventColor: '#378006', // Customize the color of events
-        eventTextColor: '#fff', // Customize the text color of events
-        editable: false, // Makes events non-editable (if required)
-        displayEventTime: false, // Hides the time in month view
+        events: 'fetch_events.php', 
+        eventColor: '#378006', 
+        eventTextColor: '#fff', 
+        editable: false, 
+        displayEventTime: false, 
     });
     calendar.render();
 });
@@ -282,14 +282,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 url: 'submit_event.php',
                 type: 'POST',
                 data: $(this).serialize(),
-                dataType: 'html',  // Expect HTML response
+                dataType: 'html',  
                 success: function(response) {
-                    // Assuming your PHP script returns a success message in plain text or HTML
-                    alert(response);  // Show the response message
-                    location.reload();  // Reload the calendar
+                    alert(response); 
+                    location.reload();  
                 },
                 error: function(xhr, status, error) {
-                    alert('An error occurred: ' + error);  // General AJAX error handling
+                    alert('An error occurred: ' + error); 
                 }
             });
         });
@@ -304,9 +303,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 url: $form.attr('action'),
                 type: $form.attr('method'),
                 data: $form.serialize(),
-                dataType: 'html',  // Expect HTML response
+                dataType: 'html',  
                 success: function(response) {
-                    alert(response);  // Show a success message (optional)
+                    alert(response);  
                 },
                 error: function(xhr, status, error) {
                     alert("Error updating status: " + error);
@@ -325,15 +324,14 @@ document.addEventListener('DOMContentLoaded', function() {
         data: form.serialize(),
         dataType: 'html',
         success: function(response) {
-          alert(response); // Show the response message
-          location.reload(); // Reload the calendar or update as needed
+          alert(response); 
+          location.reload(); 
         },
         error: function(xhr, status, error) {
-          alert('An error occurred: ' + error); // General AJAX error handling
+          alert('An error occurred: ' + error); 
         }
       });
 
-      // Hide the modal after confirmation
       $('#confirmationModal').modal('hide');
     });
   });

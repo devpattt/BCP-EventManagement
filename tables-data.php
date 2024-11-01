@@ -200,81 +200,82 @@ include 'fetchname.php';
 <section class="section">
   <div class="row">
     <div class="col-lg-12">
-          <!-- Table with stripped rows -->
-          <table class="table datatable">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Contact</th>
-                <th>Event Title</th>
-                <th data-type="date" data-format="YYYY/DD/MM">Reservation Date</th>
-                <th>No. of people</th>
-                <th>Reservation Date</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-            <?php
-              $servername = "localhost"; 
-              $username = "root"; 
-              $password = ""; 
-              $dbname = "bcp_sms3_ems"; 
+      <table class="table datatable">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Event Title</th>
+            <th data-type="date" data-format="YYYY/DD/MM">Reservation Date</th>
+            <th>No. of people</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+            $servername = "localhost"; 
+            $username = "root"; 
+            $password = ""; 
+            $dbname = "bcp_sms3_ems"; 
 
-              $conn = new mysqli($servername, $username, $password, $dbname);
+            $conn = new mysqli($servername, $username, $password, $dbname);
 
-              if ($conn->connect_error) {
-                  die("Connection failed: " . $conn->connect_error);
-              }
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
 
-              $statuses = ['Pending', 'Approved', 'Cancelled'];  // Define available status options
+            $statuses = ['Pending', 'Approved', 'Cancelled'];
 
-              $sql = "SELECT id, `name`, contact, event_title, attendees, date_booked, time, booked_at, status 
-              FROM bcp_sms3_booking 
-              ORDER BY booked_at DESC";
-              $result = $conn->query($sql);
+            $sql = "SELECT id, `name`, contact, event_title, attendees, date_booked, time, booked_at, status 
+            FROM bcp_sms3_booking 
+            ORDER BY booked_at DESC";
+            $result = $conn->query($sql);
 
-              if ($result->num_rows > 0) {
-                  while($row = $result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
-                    echo "<td>" . htmlspecialchars($row["name"]) . "</td>";
-                    echo "<td>" . htmlspecialchars($row["contact"]) . "</td>";
-                    echo "<td>" . htmlspecialchars($row["event_title"]) . "</td>";
-                    echo "<td>" . htmlspecialchars($row["date_booked"]) . "</td>";
-                    echo "<td>" . htmlspecialchars($row["attendees"]) . "</td>";
-                    echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                  echo "<tr>";
+                  echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($row["name"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($row["contact"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($row["event_title"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($row["date_booked"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($row["attendees"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
 
-                    // Add a form for changing the status
-                    echo "<td>";
-                    echo "<form method='POST' action='update_status.php' class='status-form'>"; // Keep the form action as it is
-                    echo "<input type='hidden' name='event_id' value='" . htmlspecialchars($row["id"]) . "'>";  // Event ID (assuming you have an id column)
-                    echo "<select name='status' onchange='openModal(this)'>"; // Update here
+                  echo "<td>";
+                  echo "<form method='POST' action='update_status.php' class='status-form'>"; 
+                  echo "<input type='hidden' name='event_id' value='" . htmlspecialchars($row["id"]) . "'>";  
+                  echo "<select name='status' onchange='this.form.submit()'>"; 
 
-                    foreach ($statuses as $status) {
-                      $selected = ($status == $row["status"]) ? "selected" : "";  // Mark the current status as selected
-                      echo "<option value='$status' $selected>$status</option>";
-                    }
-
-                    echo "</select>";
-                    echo "</form>";
-                    echo "</td>";
-
-                    echo "</tr>";
+                  foreach ($statuses as $status) {
+                    $selected = ($status == $row["status"]) ? "selected" : ""; 
+                    echo "<option value='$status' $selected>$status</option>";
                   }
+
+                  echo "</select>";
+                  echo "</form>";
+                  echo "</td>";
+
+                  echo "</tr>";
                 }
-              ?>
-            </tbody>
-          </table>
-          <!-- End Table with stripped rows -->
-        </div>
-      </div>
+            } else {
+                echo "<tr><td colspan='8'>No records found.</td></tr>";
+            }
+
+            $conn->close();
+          ?>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
+
+
+
 </main><!-- End #main -->
 
-<!-- Confirmation Modal -->
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
 <div class="modal-dialog">
   <div class="modal-content">
@@ -332,21 +333,17 @@ function openModal(selectElement) {
     const confirmButton = document.getElementById('confirmButton');
     const form = selectElement.closest('form');
 
-    // Store the selected value and event ID (if needed)
     const selectedValue = selectElement.value;
     const eventId = form.querySelector('input[name="event_id"]').value;
 
-    // Remove any previous confirm button event listeners to avoid multiple submissions
     confirmButton.onclick = function() {
-        form.submit();  // Only submit the form when "Confirm" is clicked
+        form.submit();  
     };
 
-    // Show the modal
     modal.show();
 
-    // Reset the select to the previous value when the modal is canceled
     modal._element.addEventListener('hidden.bs.modal', function () {
-        form.reset();  // Reset the form (including the select element) when modal is hidden
+        form.reset(); 
     });
 }
 

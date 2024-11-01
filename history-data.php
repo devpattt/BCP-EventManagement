@@ -201,7 +201,6 @@ include 'fetchname.php';
 <section class="section">
   <div class="row">
     <div class="col-lg-12">
-      <!-- Table with stripped rows -->
       <table class="table datatable">
         <thead>
           <tr>
@@ -213,7 +212,7 @@ include 'fetchname.php';
             <th>No. of People</th>
             <th>Time</th>
             <th>Status</th>
-            <th>Action</th> <!-- New Action Column -->
+            <th>Action</th> 
           </tr>
         </thead>
         <tbody>
@@ -229,7 +228,6 @@ include 'fetchname.php';
               die("Connection failed: " . $conn->connect_error);
           }
 
-          // Fetch only Approved and Cancelled bookings
           $sql = "SELECT id, `name`, contact, event_title, date_booked, attendees, time, status FROM bcp_sms3_event_history
              WHERE status IN ('Approved', 'Cancelled')
              ORDER BY booked_at DESC";
@@ -247,7 +245,6 @@ include 'fetchname.php';
                     echo "<td>" . htmlspecialchars($row["attendees"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["status"]) . "</td>";
-                    // Add the Update button here
                     echo "<td><button class='btn btn-primary' onclick='loadBooking(" . $row["id"] . ")'>Update</button></td>";
                     echo "</tr>";
                 }
@@ -259,15 +256,15 @@ include 'fetchname.php';
         ?>
         </tbody>
       </table>
-      <!-- End Table with stripped rows -->
     </div>
   </div>
 </section>
 
 
 
-</main><!-- End #main -->
-<!-- Confirmation Modal -->
+</main>
+
+
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
 <div class="modal-dialog">
   <div class="modal-content">
@@ -286,7 +283,7 @@ include 'fetchname.php';
 </div>
 </div>
 
-<!-- Add this modal structure below your table -->
+
 <div class="modal fade" id="updateBookingModal" tabindex="-1" role="dialog" aria-labelledby="updateBookingModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -348,15 +345,14 @@ include 'fetchname.php';
 <script src="assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="assets/vendor/php-email-form/validate.js"></script>
 <script src="assets/js/main.js"></script>
-<!-- Include jQuery and Bootstrap JS in your <head> or before closing </body> tag -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    // Function to load booking details into the modal
+   
     function loadBooking(id) {
         $.ajax({
-            url: 'get_booking.php', // A separate PHP file to fetch booking details
+            url: 'get_booking.php', 
             type: 'GET',
             data: { id: id },
             success: function(data) {
@@ -402,22 +398,16 @@ function openModal(selectElement) {
     const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
     const confirmButton = document.getElementById('confirmButton');
     const form = selectElement.closest('form');
-
-    // Store the selected value and event ID (if needed)
     const selectedValue = selectElement.value;
     const eventId = form.querySelector('input[name="event_id"]').value;
-
-    // Remove any previous confirm button event listeners to avoid multiple submissions
     confirmButton.onclick = function() {
-        form.submit();  // Only submit the form when "Confirm" is clicked
+        form.submit(); 
     };
 
-    // Show the modal
     modal.show();
 
-    // Reset the select to the previous value when the modal is canceled
     modal._element.addEventListener('hidden.bs.modal', function () {
-        form.reset();  // Reset the form (including the select element) when modal is hidden
+        form.reset();  
     });
 }
 

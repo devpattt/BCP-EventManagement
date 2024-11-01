@@ -6,7 +6,6 @@ if ($connection->connect_error) {
     die("Connection failed: " . $connection->connect_error);
 }
 
-// Modify query to only select approved events with a future date
 $sql = "SELECT id, event_title AS title, date_booked AS start 
         FROM bcp_sms3_booking 
         WHERE status = 'approved' AND date_booked >= CURDATE()";

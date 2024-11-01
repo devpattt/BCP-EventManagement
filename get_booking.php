@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 }
 
 if (isset($_GET['id'])) {
-    $id = intval($_GET['id']); // Convert to integer for security
+    $id = intval($_GET['id']); 
     $sql = "SELECT * FROM bcp_sms3_event_history WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
@@ -20,7 +20,7 @@ if (isset($_GET['id'])) {
 
     if ($result->num_rows > 0) {
         $booking = $result->fetch_assoc();
-        echo json_encode($booking); // Return booking details as JSON
+        echo json_encode($booking); 
     } else {
         echo json_encode([]);
     }
