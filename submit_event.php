@@ -30,8 +30,6 @@ if (isset($_POST['time'])) {
     die(json_encode(['status' => 'error', 'message' => 'Time is required.']));
 }
 
-$status = 'pending'; 
-
 $attendees = isset($_POST['attendees']) && is_numeric($_POST['attendees']) ? $_POST['attendees'] : 0;
 
 
