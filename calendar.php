@@ -1,3 +1,15 @@
+
+<?php
+
+session_start();
+if (!isset($_SESSION['accountId'])) {
+    header("index.php");
+    exit();
+}
+
+include 'fetchname.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,7 +87,7 @@
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="assets/img/default profile.jpg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">Administrator</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo htmlspecialchars($fullname); ?></span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">

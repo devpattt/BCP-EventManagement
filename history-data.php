@@ -1,3 +1,14 @@
+<?php
+
+session_start();
+if (!isset($_SESSION['accountId'])) {
+    header("index.php");
+    exit();
+}
+
+include 'fetchname.php';
+?>
+
 <!DOCTYPE html>
 <lang="en">
 
@@ -67,14 +78,13 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+            <img src="assets/img/default profile.jpg" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo htmlspecialchars($fullname); ?></span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
-              <span>Web Designer</span>
+              <span>Administrator</span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -218,7 +228,9 @@
 
               $statuses = ['Pending', 'Approved', 'Cancelled'];  // Define available status options
 
-              $sql = "SELECT id, `name`, contact, event_title, attendees, date_booked, time, booked_at, status FROM bcp_sms3_booking";
+              $sql = "SELECT id, `name`, contact, event_title, attendees, date_booked, time, booked_at, status FROM bcp_sms3_booking
+               ORDER BY booked_at DESC";
+
               $result = $conn->query($sql);
 
               if ($result->num_rows > 0) {
@@ -231,23 +243,7 @@
                     echo "<td>" . htmlspecialchars($row["date_booked"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["attendees"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
-
-                    // Add a form for changing the status
-                    echo "<td>";
-                    echo "<form method='POST' action='update_status.php' class='status-form'>"; // Keep the form action as it is
-                    echo "<input type='hidden' name='event_id' value='" . htmlspecialchars($row["id"]) . "'>";  // Event ID (assuming you have an id column)
-                    echo "<select name='status' onchange='openModal(this)'>"; // Update here
-
-                    foreach ($statuses as $status) {
-                      $selected = ($status == $row["status"]) ? "selected" : "";  // Mark the current status as selected
-                      echo "<option value='$status' $selected>$status</option>";
-                    }
-
-                    echo "</select>";
-                    echo "</form>";
-                    echo "</td>";
-
-                    echo "</tr>";
+                    echo "<td>" . htmlspecialchars($row["status"]) . "</td>";
                   }
                 }
               ?>

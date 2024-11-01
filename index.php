@@ -1,5 +1,10 @@
 <?php
 session_start();
+if (isset($_SESSION['accountId'])) {
+    header("eventdash.php");
+    exit();
+}
+
 include 'connection.php'; // Ensure this is included correctly
 
 $error = ''; // Initialize error variable
