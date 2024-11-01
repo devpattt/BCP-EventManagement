@@ -157,12 +157,12 @@
         </a>
         </li>
         <li>
-        <a href="tables-data.php" class="active">
+        <a href="tables-data.php">
             <i class="bi bi-circle"></i><span>Event Bookings</span>
         </a>
         </li>
         <li>
-        <a href="history-data.php">
+        <a href="history-data.php" class="active">
             <i class="bi bi-circle"></i><span>History</span>
         </a>
         </li>

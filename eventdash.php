@@ -1,3 +1,40 @@
+<?php
+$servername = "localhost"; 
+$username = "root"; 
+$password = ""; 
+$dbname = "bcp_sms3_ems"; 
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// SQL query to count bookings grouped by month
+$sql = "SELECT MONTH(date_booked) AS month, COUNT(*) AS booking_count
+        FROM bcp_sms3_booking
+        WHERE YEAR(date_booked) = YEAR(CURRENT_DATE())  -- Current year
+        GROUP BY MONTH(date_booked)
+        ORDER BY MONTH(date_booked)";
+
+$result = $conn->query($sql);
+
+$bookingCounts = array_fill(0, 12, 0); // Initialize array for 12 months
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $bookingCounts[$row['month'] - 1] = $row['booking_count']; // Store counts in corresponding month index
+    }
+}
+
+$conn->close();
+?>
+
+<!-- Pass data to JavaScript -->
+<script>
+  const bookingCounts = <?php echo json_encode($bookingCounts); ?>;
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -129,6 +166,11 @@
                     <i class="bi bi-circle"></i><span>Event Bookings</span>
                 </a>
                 </li>
+                <li>
+                <a href="history-data.php">
+                    <i class="bi bi-circle"></i><span>History</span>
+                </a>
+                </li>
               
       <hr class="sidebar-divider">
   </aside><!-- End Sidebar-->
@@ -212,92 +254,84 @@
 
 <!-- End Customers Card -->
 
-            <!-- Reports -->
-            <div class="col-12">
-              <div class="card">
+           <!-- Reports -->
+<div class="col-12">
+  <div class="card">
 
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
+    <div class="filter">
+      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+        <li class="dropdown-header text-start">
+          <h6>Filter</h6>
+        </li>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
+        <li><a class="dropdown-item" href="#">Today</a></li>
+        <li><a class="dropdown-item" href="#">This Month</a></li>
+        <li><a class="dropdown-item" href="#">This Year</a></li>
+      </ul>
+    </div>
 
-                <div class="card-body">
-                  <h5 class="card-title">Reports <span>/Today</span></h5>
+    <div class="card-body">
+      <h5 class="card-title">Reports <span>/ Monthly Bookings</span></h5>
 
-                  <!-- Line Chart -->
-                  <div id="reportsChart"></div>
+      <!-- Bar Chart -->
+      <div id="reportsChart"></div>
 
-                  <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                      new ApexCharts(document.querySelector("#reportsChart"), {
-                        series: [{
-                          name: 'Name',
-                          data: [31, 40, 28, 51, 42, 82, 56],
-                        }, {
-                          name: 'Name',
-                          data: [11, 32, 45, 32, 34, 52, 41]
-                        }, {
-                          name: 'Name',
-                          data: [15, 11, 32, 18, 9, 24, 11]
-                        }],
-                        chart: {
-                          height: 350,
-                          type: 'area',
-                          toolbar: {
-                            show: false
-                          },
-                        },
-                        markers: {
-                          size: 4
-                        },
-                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
-                        fill: {
-                          type: "gradient",
-                          gradient: {
-                            shadeIntensity: 1,
-                            opacityFrom: 0.3,
-                            opacityTo: 0.4,
-                            stops: [0, 90, 100]
-                          }
-                        },
-                        dataLabels: {
-                          enabled: false
-                        },
-                        stroke: {
-                          curve: 'smooth',
-                          width: 2
-                        },
-                        xaxis: {
-                          type: 'datetime',
-                          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-                        },
-                        tooltip: {
-                          x: {
-                            format: 'dd/MM/yy HH:mm'
-                          },
-                        }
-                      }).render();
-                    });
-                  </script>
-                  <!-- End Line Chart -->
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          new ApexCharts(document.querySelector("#reportsChart"), {
+            series: [{
+              name: 'Bookings',
+              data: bookingCounts, // Use the fetched booking counts
+            }],
+            chart: {
+              height: 350,
+              type: 'bar',
+              toolbar: {
+                show: false
+              },
+            },
+            colors: ['#4154f1'],
+            plotOptions: {
+              bar: {
+                borderRadius: 4,
+                horizontal: false,
+              },
+            },
+            dataLabels: {
+              enabled: true,
+            },
+            xaxis: {
+              categories: [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+              ],
+              title: {
+                text: 'Months',
+              },
+            },
+            yaxis: {
+              title: {
+                text: 'Number of Bookings',
+              },
+            },
+            tooltip: {
+              y: {
+                formatter: function (val) {
+                  return val + " bookings";
+                }
+              },
+            }
+          }).render();
+        });
+      </script>
+      <!-- End Bar Chart -->
 
-                </div>
+    </div>
 
-              </div>
-            </div><!-- End Reports -->
-          </div>
-        </div><!-- End Left side columns -->
-        <!-- Right side columns -->
-        
-    </section>
+  </div>
+</div><!-- End Reports -->
+
   </main><!-- End #main -->
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>

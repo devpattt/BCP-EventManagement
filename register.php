@@ -1,9 +1,8 @@
 <?php
 session_start();
-include 'connection.php'; // Ensure this is included correctly
+include 'connection.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Collect and validate input data
     $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
     $accountId = filter_input(INPUT_POST, 'AccountId', FILTER_SANITIZE_NUMBER_INT);

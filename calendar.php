@@ -164,6 +164,12 @@
             <i class="bi bi-circle"></i><span>Event Bookings</span>
         </a>
         </li>
+        <li>
+        <a href="history-data.php">
+            <i class="bi bi-circle"></i><span>History</span>
+        </a>
+        </li>
+
       </ul>
       </li><!-- End System Nav -->
 
