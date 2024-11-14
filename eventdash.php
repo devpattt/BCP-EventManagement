@@ -2,40 +2,59 @@
 
 session_start();
 if (!isset($_SESSION['accountId'])) {
-    header("index.php");
+    header("Location: index.php");
     exit();
 }
 
-include 'fetchname.php';
-$servername = "localhost"; 
-$username = "root"; 
-$password = ""; 
-$dbname = "bcp_sms3_ems"; 
+include 'fetchname.php'; 
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$host = 'localhost';  
+$username = 'root';  
+$password = '';      
+$dbname = 'bcp_sms3_ems'; 
+
+$conn = new mysqli($host, $username, $password, $dbname);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT MONTH(date_booked) AS month, COUNT(*) AS booking_count
-        FROM bcp_sms3_event_history
-        WHERE YEAR(date_booked) = YEAR(CURRENT_DATE())  
-        GROUP BY MONTH(date_booked)
-        ORDER BY MONTH(date_booked)";
+$sql = "
+    SELECT 
+        MONTH(date_booked) AS month,
+        COUNT(id) AS booking_count,
+        SUM(attendees) AS total_attendees
+    FROM bcp_sms3_event_history
+    WHERE YEAR(date_booked) = YEAR(CURRENT_DATE)
+    GROUP BY MONTH(date_booked)
+    ORDER BY MONTH(date_booked);
+";
 
 $result = $conn->query($sql);
 
-$bookingCounts = array_fill(0, 12, 0); 
+$bookingCounts = [];
+$attendeeCounts = [];
+$months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+for ($i = 0; $i < 12; $i++) {
+    $bookingCounts[$i] = 0;
+    $attendeeCounts[$i] = 0;
+}
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $bookingCounts[$row['month'] - 1] = $row['booking_count'];
+        $monthIndex = $row['month'] - 1; 
+        $bookingCounts[$monthIndex] = $row['booking_count'];
+        $attendeeCounts[$monthIndex] = $row['total_attendees'];
     }
 }
 
 $conn->close();
+
+$bookingCountsJson = json_encode($bookingCounts);
+$attendeeCountsJson = json_encode($attendeeCounts);
 ?>
+
 
 <script>
   const bookingCounts = <?php echo json_encode($bookingCounts); ?>;
@@ -191,85 +210,14 @@ $conn->close();
       </nav>
     </div><!-- End Page Title -->
 
-    <section class="section dashboard">
-  <div class="row">
-
-    <!-- Full-Width Container for Cards -->
-    <div class="col-lg-12">
-      <div class="row d-flex justify-content-between">
-
-      <!-- Card 1: Event Today -->
-<div class="col-lg-4 col-md-6 mb-4">
-  <div class="card info-card sales-card">
-    <div class="card-body">
-      <h5 class="card-title">Event <span>| Today</span></h5>
-      <div class="d-flex align-items-center">
-        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-          <i class="bi bi-people"></i>
-        </div>
-        <div class="ps-3">
-          <h6 id="today-count">Loading...</h6>
-          <span id="today-increase" class="text-success small pt-1 fw-bold">Loading...</span> 
-          <span class="text-muted small pt-2 ps-1">attendees</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Card 2: Event This Month -->
-<div class="col-lg-4 col-md-6 mb-4">
-  <div class="card info-card revenue-card">
-    <div class="card-body">
-      <h5 class="card-title">Event <span>| This Month</span></h5>
-      <div class="d-flex align-items-center">
-        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-          <i class="bi bi-people"></i>
-        </div>
-        <div class="ps-3">
-          <h6 id="month-count">Loading...</h6>
-          <span id="month-increase" class="text-success small pt-1 fw-bold">Loading...</span> 
-          <span class="text-muted small pt-2 ps-1">attendees</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Card 3: Event This Year -->
-<div class="col-lg-4 col-md-6 mb-4">
-  <div class="card info-card customers-card">
-    <div class="card-body">
-      <h5 class="card-title">Event <span>| This Year</span></h5>
-      <div class="d-flex align-items-center">
-        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-          <i class="bi bi-people"></i>
-        </div>
-        <div class="ps-3">
-          <h6 id="year-count">Loading...</h6>
-          <span id="year-increase" class="text-success small pt-1 fw-bold">Loading...</span> 
-          <span class="text-muted small pt-2 ps-1">attendees</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</section>
-
-<!-- End Customers Card -->
-
-           <!-- Reports -->
-<div class="col-12">
+    <div class="col-12">
   <div class="card">
-
     <div class="filter">
       <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
       <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
         <li class="dropdown-header text-start">
           <h6>Filter</h6>
         </li>
-
         <li><a class="dropdown-item" href="#">Today</a></li>
         <li><a class="dropdown-item" href="#">This Month</a></li>
         <li><a class="dropdown-item" href="#">This Year</a></li>
@@ -286,9 +234,14 @@ $conn->close();
         document.addEventListener("DOMContentLoaded", () => {
           new ApexCharts(document.querySelector("#reportsChart"), {
             series: [{
-              name: 'Bookings',
-              data: bookingCounts, // Use the fetched booking counts
-            }],
+                name: 'Bookings',
+                data: <?php echo $bookingCountsJson; ?>, 
+              },
+              {
+                name: 'Attendees',
+                data: <?php echo $attendeeCountsJson; ?>, 
+              }
+            ],
             chart: {
               height: 350,
               type: 'bar',
@@ -296,7 +249,7 @@ $conn->close();
                 show: false
               },
             },
-            colors: ['#4154f1'],
+            colors: ['#4154f1', '#ff5733'], 
             plotOptions: {
               bar: {
                 borderRadius: 4,
@@ -307,23 +260,20 @@ $conn->close();
               enabled: true,
             },
             xaxis: {
-              categories: [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-              ],
+              categories: <?php echo json_encode($months); ?>, 
               title: {
                 text: 'Months',
               },
             },
             yaxis: {
               title: {
-                text: 'Number of Bookings',
+                text: 'Number of Bookings / Attendees',
               },
             },
             tooltip: {
               y: {
                 formatter: function (val) {
-                  return val + " bookings";
+                  return val + " people";
                 }
               },
             }
@@ -331,6 +281,9 @@ $conn->close();
         });
       </script>
       <!-- End Bar Chart -->
+    </div>
+  </div>
+</div>
 
     </div>
 

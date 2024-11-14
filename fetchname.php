@@ -28,7 +28,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    // Fetch user data
     $row = $result->fetch_assoc();
     $fullname = $row['Fname'];
 } else {
