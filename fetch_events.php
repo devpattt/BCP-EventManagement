@@ -7,7 +7,7 @@ if ($connection->connect_error) {
 }
 
 $sql = "SELECT id, event_title AS title, date_booked AS start 
-        FROM bcp_sms3_booking 
+        FROM bcp_sms3_event_history
         WHERE status = 'approved' AND date_booked >= CURDATE()";
 $result = $connection->query($sql);
 

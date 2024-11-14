@@ -50,12 +50,12 @@ $conn = null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Clinic Management System.">
     <link rel="stylesheet" href="assets/css/index.css">
-    <title>Login - CMS</title>
+    <title>Login - EMS</title> 
 </head>
 <body>
     <div class="logo">
         <img src="assets/img/bcp logo.png" alt="Logo">
-        <p>Clinic Management System</p> 
+        <p>Event Management System</p> 
     </div>
     
     <div class="login-container">

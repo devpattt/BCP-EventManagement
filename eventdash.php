@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 }
 
 $sql = "SELECT MONTH(date_booked) AS month, COUNT(*) AS booking_count
-        FROM bcp_sms3_booking
+        FROM bcp_sms3_event_history
         WHERE YEAR(date_booked) = YEAR(CURRENT_DATE())  
         GROUP BY MONTH(date_booked)
         ORDER BY MONTH(date_booked)";

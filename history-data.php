@@ -146,9 +146,6 @@ include 'fetchname.php';
     <img src="assets/img/bcp logo.png" alt="Logo" style="width: 100px; height: auto;">
 </div>
 
-
-   
-
         <hr class="sidebar-divider">
 
       <li class="nav-heading">Event Management System</li>
@@ -208,11 +205,10 @@ include 'fetchname.php';
             <th>Name</th>
             <th>Contact</th>
             <th>Event Title</th>
-            <th>Reservation Date</th>
+            <th data-type="date" data-format="YYYY/DD/MM">Reservation Date</th>
             <th>No. of People</th>
             <th>Time</th>
             <th>Status</th>
-            <th>Action</th> 
           </tr>
         </thead>
         <tbody>
@@ -228,7 +224,9 @@ include 'fetchname.php';
               die("Connection failed: " . $conn->connect_error);
           }
 
-          $sql = "SELECT id, `name`, contact, event_title, date_booked, attendees, time, status FROM bcp_sms3_event_history
+          $statuses = ['Pending', 'Approved', 'Cancelled'];
+
+          $sql = "SELECT id, `name`, contact, event_title, attendees, date_booked, time, status FROM bcp_sms3_event_history
              WHERE status IN ('Approved', 'Cancelled')
              ORDER BY booked_at DESC";
 
@@ -245,7 +243,6 @@ include 'fetchname.php';
                     echo "<td>" . htmlspecialchars($row["attendees"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["time"]) . "</td>";
                     echo "<td>" . htmlspecialchars($row["status"]) . "</td>";
-                    echo "<td><button class='btn btn-primary' onclick='loadBooking(" . $row["id"] . ")'>Update</button></td>";
                     echo "</tr>";
                 }
             } else {
@@ -259,11 +256,7 @@ include 'fetchname.php';
     </div>
   </div>
 </section>
-
-
-
 </main>
-
 
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
 <div class="modal-dialog">
@@ -283,58 +276,6 @@ include 'fetchname.php';
 </div>
 </div>
 
-
-<div class="modal fade" id="updateBookingModal" tabindex="-1" role="dialog" aria-labelledby="updateBookingModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateBookingModalLabel">Update Booking</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="updateBookingForm">
-                    <input type="hidden" name="id" id="bookingId">
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="contact">Contact:</label>
-                        <input type="text" class="form-control" id="contact" name="contact" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="event_title">Event Title:</label>
-                        <input type="text" class="form-control" id="event_title" name="event_title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="date_booked">Reservation Date:</label>
-                        <input type="date" class="form-control" id="date_booked" name="date_booked" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="attendees">No. of People:</label>
-                        <input type="number" class="form-control" id="attendees" name="attendees" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="time">Time:</label>
-                        <input type="time" class="form-control" id="time" name="time" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Status:</label>
-                        <select class="form-control" id="status" name="status" required>
-                            <option value="Approved">Approved</option>
-                            <option value="Cancelled">Cancelled</option>
-                            <option value="Pending">Pending</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update Booking</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -346,71 +287,6 @@ include 'fetchname.php';
 <script src="assets/vendor/php-email-form/validate.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<script>
-   
-    function loadBooking(id) {
-        $.ajax({
-            url: 'get_booking.php', 
-            type: 'GET',
-            data: { id: id },
-            success: function(data) {
-                const booking = JSON.parse(data);
-                $('#bookingId').val(booking.id);
-                $('#name').val(booking.name);
-                $('#contact').val(booking.contact);
-                $('#event_title').val(booking.event_title);
-                $('#date_booked').val(booking.date_booked);
-                $('#attendees').val(booking.attendees);
-                $('#time').val(booking.time);
-                $('#status').val(booking.status);
-                $('#updateBookingModal').modal('show');
-            }
-        });
-    }
-
-   
- window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const status = urlParams.get('status');
-
-    if (status === 'success') {
-        showMessage("Status updated successfully!", "success");
-    } else if (status === 'error') {
-        showMessage("Error updating status. Please try again.", "error");
-    }
- }
-
-function showMessage(message, type) {
-    const messageBox = document.getElementById('statusMessage');
-    const messageContent = document.getElementById('messageContent');
-
-    messageContent.textContent = message;
-    messageBox.className = `alert-box ${type === 'error' ? 'error' : ''} show`;
-    
-    setTimeout(() => {
-        messageBox.classList.remove('show');
-    }, 3000);
-}
-
-function openModal(selectElement) {
-    const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-    const confirmButton = document.getElementById('confirmButton');
-    const form = selectElement.closest('form');
-    const selectedValue = selectElement.value;
-    const eventId = form.querySelector('input[name="event_id"]').value;
-    confirmButton.onclick = function() {
-        form.submit(); 
-    };
-
-    modal.show();
-
-    modal._element.addEventListener('hidden.bs.modal', function () {
-        form.reset();  
-    });
-}
-
-</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>    
 </body>
 </html>
