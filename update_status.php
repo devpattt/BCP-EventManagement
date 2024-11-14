@@ -13,12 +13,9 @@ if ($conn->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $event_id = intval($_POST['event_id']);
     $new_status = $_POST['status'];
-    $current_date = date("Y-m-d"); 
 
-    echo "Current Date: $current_date";  
-
-    $stmt = $conn->prepare("UPDATE bcp_sms3_booking SET status = ?, date_booked = ? WHERE id = ?");
-    $stmt->bind_param("ssi", $new_status, $current_date, $event_id);
+    $stmt = $conn->prepare("UPDATE bcp_sms3_booking SET status = ? WHERE id = ?");
+    $stmt->bind_param("si", $new_status, $event_id);
 
     if ($stmt->execute()) {
         if ($new_status == 'Cancelled' || $new_status == 'Approved') {

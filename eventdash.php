@@ -226,61 +226,67 @@ $attendeeCountsJson = json_encode($attendeeCounts);
 
     <div class="card-body">
       <h5 class="card-title">Reports <span>/ Monthly Bookings</span></h5>
-
-      <!-- Bar Chart -->
       <div id="reportsChart"></div>
 
-      <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          new ApexCharts(document.querySelector("#reportsChart"), {
-            series: [{
-                name: 'Bookings',
-                data: <?php echo $bookingCountsJson; ?>, 
-              },
-              {
-                name: 'Attendees',
-                data: <?php echo $attendeeCountsJson; ?>, 
-              }
-            ],
-            chart: {
-              height: 350,
-              type: 'bar',
-              toolbar: {
-                show: false
-              },
-            },
-            colors: ['#4154f1', '#ff5733'], 
-            plotOptions: {
-              bar: {
-                borderRadius: 4,
-                horizontal: false,
-              },
-            },
-            dataLabels: {
-              enabled: true,
-            },
-            xaxis: {
-              categories: <?php echo json_encode($months); ?>, 
-              title: {
-                text: 'Months',
-              },
-            },
-            yaxis: {
-              title: {
-                text: 'Number of Bookings / Attendees',
-              },
-            },
-            tooltip: {
-              y: {
-                formatter: function (val) {
-                  return val + " people";
-                }
-              },
+      <div id="reportsChart"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    new ApexCharts(document.querySelector("#reportsChart"), {
+      series: [
+        {
+          name: 'Bookings',
+          data: <?php echo $bookingCountsJson; ?>, // JSON data for booking counts
+        },
+        {
+          name: 'Attendees',
+          data: <?php echo $attendeeCountsJson; ?>, // JSON data for attendee counts
+        }
+      ],
+      chart: {
+        height: 350,
+        type: 'line',  // Set chart type to 'line'
+        toolbar: {
+          show: false
+        },
+      },
+      colors: ['#4154f1', '#ff5733'], // Line colors for bookings and attendees
+      dataLabels: {
+        enabled: true, // Enable data labels on the lines
+      },
+      stroke: {
+        width: 3, // Line thickness
+        curve: 'smooth', // Smooth curve for the line
+      },
+      xaxis: {
+        categories: <?php echo json_encode($months); ?>, // Array of months from PHP
+        title: {
+          text: 'Months', // X-axis label
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Number of Bookings / Attendees', // Y-axis label
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: function (val, opts) {
+            if (opts.seriesIndex === 0) { // For Bookings
+              return val + " booking"; // Display "booking" for the first series (Bookings)
+            } else {
+              return val + " people"; // Display "people" for the second series (Attendees)
             }
-          }).render();
-        });
-      </script>
-      <!-- End Bar Chart -->
+          }
+        },
+      }
+    }).render();
+  });
+</script>
+
+
+
+
     </div>
   </div>
 </div>
