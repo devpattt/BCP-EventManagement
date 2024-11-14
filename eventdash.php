@@ -236,46 +236,46 @@ $attendeeCountsJson = json_encode($attendeeCounts);
       series: [
         {
           name: 'Bookings',
-          data: <?php echo $bookingCountsJson; ?>, // JSON data for booking counts
+          data: <?php echo $bookingCountsJson; ?>,
         },
         {
           name: 'Attendees',
-          data: <?php echo $attendeeCountsJson; ?>, // JSON data for attendee counts
+          data: <?php echo $attendeeCountsJson; ?>, 
         }
       ],
       chart: {
         height: 350,
-        type: 'line',  // Set chart type to 'line'
+        type: 'line',  
         toolbar: {
           show: false
         },
       },
-      colors: ['#4154f1', '#ff5733'], // Line colors for bookings and attendees
+      colors: ['#4154f1', '#ff5733'], 
       dataLabels: {
-        enabled: true, // Enable data labels on the lines
+        enabled: true, 
       },
       stroke: {
-        width: 3, // Line thickness
-        curve: 'smooth', // Smooth curve for the line
+        width: 3, 
+        curve: 'smooth', 
       },
       xaxis: {
-        categories: <?php echo json_encode($months); ?>, // Array of months from PHP
+        categories: <?php echo json_encode($months); ?>, 
         title: {
-          text: 'Months', // X-axis label
+          text: 'Months', 
         },
       },
       yaxis: {
         title: {
-          text: 'Number of Bookings / Attendees', // Y-axis label
+          text: 'Number of Bookings / Attendees',
         },
       },
       tooltip: {
         y: {
           formatter: function (val, opts) {
-            if (opts.seriesIndex === 0) { // For Bookings
-              return val + " booking"; // Display "booking" for the first series (Bookings)
+            if (opts.seriesIndex === 0) { 
+              return val + " booking"; 
             } else {
-              return val + " people"; // Display "people" for the second series (Attendees)
+              return val + " people"; 
             }
           }
         },
